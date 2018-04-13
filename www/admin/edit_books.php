@@ -120,10 +120,10 @@ echo '<option value="'.$fl.'">'.$fl.'</option>';
 </select>
 </div>
 <div>
-
 <input type="submit" name="submit" value="Edit Book">
 </form>
 <?php echo '<a href=edit_image.php?book_id='.$getbooks['book_id'].'>click to edit book image</a>'; ?>
+
 </div>
 
 

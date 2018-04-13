@@ -231,6 +231,7 @@ function curNav($page){
 
 }
 
+
 function editBookImage($dbcon, $bookId, $input){
   $stat= $dbcon->prepare("UPDATE add_books SET img_path=:img WHERE book_id=:bi");
 
@@ -242,6 +243,8 @@ function editBookImage($dbcon, $bookId, $input){
   header("Location:view_books.php");
 
 }
+
+
 function logout(){
   unset($_SESSION['admin_id']);
   unset($_SESSION['firstname']);
