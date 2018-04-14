@@ -1,21 +1,54 @@
 <?php 
-
+include "include/db.php";
+include "include/function.php";
 include "include/header2.php";
 
+session_start();
+
+
+
+      $book_id = $_GET['book_id'];
+
+
+     $_SESSION['user_id'];
+     $_SESSION['firstname'];
+     $_SESSION['lastname'];
+     $_SESSION['email'];
+     $_SESSION['username'];
+
+     
+
+     if(array_key_exists('submit', $_POST)){
+      $error = [];
+      if(empty($_POST['amount']) || !is_numeric($_POST['amount'])){
+        $error['amount'] = "You must enter a numeric value";
+        var_dump($error);
+      }
+      if(empty($error)){
+
+      }
+     }
+
+
+
  ?>
+
+
+
+
   <!-- main content starts here -->
   <div class="main">
-    <p class="global-error">You have not chosen any amount!</p>
+    <?php  if(isset($error)){$showError = displayError($error, 'amount'); echo '<p class="global-error"'.$showError;'></p>' ;}?>
     <div class="book-display">
       <div class="display-book"></div>
       <div class="info">
         <h2 class="book-title">Javascript &amp; Jquery </h2>
         <h3 class="book-author">by Jon Duckett</h3>
         <h3 class="book-price">$125</h3>
-        <form>
+        <form method="POST">
           <label for="book-amout">Amount</label>
-          <input type="number" class="book-amount text-field">
-          <input class="def-button add-to-cart" type="submit" name="" value="Add to cart">
+          <input type="number" class="book-amount text-field" name="amount">
+          <input class="def-button add-to-cart" type="submit" name="submit" value="Add to cart">
         </form>
       </div>
     </div>
@@ -65,9 +98,9 @@ include "include/header2.php";
       </ul>
       <div class="add-comment">
         <h3 class="header">Add your comment</h3>
-        <form class="comment">
+        <form class="comment" method="POST">
           <textarea class="text-field" placeholder="write something"></textarea>
-          <button class="def-button post-comment">Upload comment</button>
+          <button class="def-button post-comment" type="submit" name="comment">Upload comment</button>
         </form>
       </div>
     </div>

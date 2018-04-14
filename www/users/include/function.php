@@ -177,7 +177,7 @@ function getBookByCategory($dbcon, $catId){
     while($row = $stat -> fetch (PDO::FETCH_BOTH)){
 
      $result .= '<li class="book">
-      <a href="#"><div class="book-cover" style="background-image:url('.$row['img_path'].'); background-size:cover; background-position:center; background-repeat: no-repeat;"></div>';
+      <a href="book_preview.php?book_id='.$row['book_id'].'"><div class="book-cover" style="background-image:url('.$row['img_path'].'); background-size:cover; background-position:center; background-repeat: no-repeat;"></div>';
       $result .= '<div class="book-price"><p>'.$row['price'].'</p></div>
         </li>';
     }
@@ -187,7 +187,7 @@ function getBookByCategory($dbcon, $catId){
 }
 function viewBooks($dbcon){
  $result ="";
-  $stat = $dbcon -> prepare("SELECT * FROM add_books");
+  $stat = $dbcon -> prepare("SELECT * FROM add_books WHERE boo_id = :bi");
   $stat ->execute();
 
   while($row = $stat -> fetch(PDO::FETCH_BOTH)){
