@@ -175,6 +175,7 @@ function getBookByCategory($dbcon, $catId){
   $stat ->bindParam(':cat_id', $catId);
   $stat ->execute();
     while($row = $stat -> fetch (PDO::FETCH_BOTH)){
+
      $result .= '<li class="book">
       <a href="#"><div class="book-cover" style="background-image:url('.$row['img_path'].'); background-size:cover; background-position:center; background-repeat: no-repeat;"></div>';
       $result .= '<div class="book-price"><p>'.$row['price'].'</p></div>

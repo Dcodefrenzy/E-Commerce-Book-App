@@ -223,7 +223,58 @@
   margin: auto;
   text-align: center;
 }
+<<<<<<< HEAD
 
+=======
+.main-book-list .book:first-of-type .book-cover {
+  background: url('../img/1.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.main-book-list .book:nth-of-type(2) .book-cover {
+  background: url('../img/2.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.main-book-list .book:nth-of-type(3) .book-cover {
+  background: url('../img/3.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.main-book-list .book:nth-of-type(4) .book-cover {
+  background: url('../img/4.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.main-book-list .book:nth-of-type(5) .book-cover {
+  background: url('../img/3.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.main-book-list .book:nth-of-type(6) .book-cover {
+  background: url('../img/4.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.main-book-list .book:nth-of-type(7) .book-cover {
+  background: url('../img/1.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.main-book-list .book:nth-of-type(8) .book-cover {
+  background: url('../img/2.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+>>>>>>> 9efb68cc506e3fd55dea85d85cd99d718101ccde
 .trending-books .book:first-of-type .book-cover {
   background: url('../img/1.jpg');
   background-size: cover;
