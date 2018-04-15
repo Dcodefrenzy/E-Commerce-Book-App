@@ -75,32 +75,21 @@ function userlogin($dbcon, $data){
     if($stat -> rowCount() !== 1 || !password_verify($data['hash'], $user['hash'])){
 
       $result[] = false;
-
-
   }else{
-    $result[] = true;
-    $result [] = $user;
+      $result[] = true;
+      $result [] = $user;
   }
   return $result;
-
 }
+
 function authentication($authenticate){
   if(!isset($authenticate['admin_id']) || !isset($authenticate['firstname']) || !isset($authenticate['lastname']) || !isset($authenticate['email'])){
     $err="please, Login valid details";
     header("location:admin_login.php?error=$err");
   }
+}
 
 
-}
-//LAST CLASS
-//here is the function for add category page.
-function addCategory($dbcon, $data){
-  $stat = $dbcon ->prepare ("INSERT INTO add_category(category_name, date_created) VALUE (:name, NOW())");
-  $stat ->bindParam(':name', $data['category_name']);
-  $stat ->execute();
-  echo "Successful";
-}
-//here is the function for view category page.
 function viewComment($dbcon){
  $result ="";
   $stat = $dbcon -> prepare("SELECT * FROM comments");
@@ -117,42 +106,86 @@ function viewComment($dbcon){
             $result .= '<p class="comment">'.$row['comment'].'</p>
           </div>
         </li>';
-
-   
-
   }
   return $result;
 }
 
 function insertCartInfo($dbcon, $input, $userId){
-  $stat = $dbcon->prepare("INSERT INTO cart(item_name, item, price, quantity, user_id)
-                          VALUES(:itn, :it, :pr, :co, :ui)");
+  $stat = $dbcon->prepare("INSERT INTO cart(item_name, item, price, quantity, total, user_id)
+                          VALUES(:itn, :it, :pr, :co, :to, :ui)");
                           $data = [
                             ':itn' => $input['book_name'],
                             ':it' => $input['img_path'],
                             ':pr' => $input['price'],
                             ':co'=> $input['amount'],
+                            ':to' => $input['total'],
                             ':ui' => $userId,
                           ];
                           $stat -> execute($data);
 
 }
 
-//function edit category is used for editing category name.
-function editCategory($dbcon, $data, $dat){
-  $stat= $dbcon->prepare("UPDATE add_category SET category_name=:e, date_created=NOW() WHERE category_id=:id");
-  $stat->bindParam(':e', $data['category_name']);
-  $stat->bindParam(':id', $dat);
+function viewCartInfo($dbcon, $userId){
+ $result ="";
+  $stat = $dbcon -> prepare("SELECT * FROM cart WHERE user_id = :ui");
+  $stat-> bindParam(':ui', $userId);
   $stat ->execute();
-  header("Location:view.php");
+  
+
+  while($row = $stat -> fetch(PDO::FETCH_BOTH)){
+
+            $result.='<tr>';
+          $result .= '<td><div class="book-cover" style="background: url('.$row['item'].'); background-size: cover;
+          background-position: center; background-repeat: no-repeat" ;></div></td>';
+          $result .= '<td><p class="book-price">'.$row['price'].'</p></td>';
+          $result .='<td><p class="quantity">'.$row['quantity'].'</p></td>';
+          $result .= '<td><p class="total">'.$row['total'].'</p></td>
+          <td>
+            <form class="update" method="POST">
+              <input type="number" class="text-field qty" name="edit">
+              <input type="submit" class="def-button change-qty"  name="submit" value="Change Qty">
+            </form>
+          </td>
+          <td>
+            <a href="cart_delete.php?cart_id='.$row['cart_id'].'" class="def-button remove-item">Remove Item</a>
+          </td>
+        </tr>';
+
+
+  }
+  return $result;
+}
+
+function viewCartInfoForUpdate($dbcon, $userId){
+ $result =[];
+  $stat = $dbcon -> prepare("SELECT * FROM cart WHERE user_id = :ui");
+  $stat-> bindParam(':ui', $userId);
+  $stat ->execute();
+
+  $result = $stat -> fetch(PDO::FETCH_BOTH);
+      
+
+
+
+  return $result;
+}
+
+function updateCartQuantity($dbcon, $input, $userId){
+  $stat= $dbcon->prepare("UPDATE cart SET quantity=:e WHERE user_id =:id && cart_id = :ca");
+  $data = [':e' => $input['edit'],
+            ':ca' => $input['cart_id'],
+            ':id' => $userId,
+            
+          ];
+  $stat ->execute($data);
 
 }
-//function delete category is use to delete categories from page view category.
-function deleteCategory($dbcon, $data){
-  $stat= $dbcon->prepare("DELETE  FROM add_category  WHERE category_id=:id");
-  $stat->bindParam(':id', $data);
+
+function deleteCart($dbcon, $input){
+  $stat= $dbcon->prepare("DELETE  FROM cart  WHERE cart_id=:id");
+  $stat->bindParam(':id', $input);
   $stat ->execute();
-  header("Location:view.php");
+ 
 
 }
 function getcategorybyid($dbcon, $id){

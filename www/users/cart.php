@@ -1,11 +1,31 @@
 <?php 
+  include "include/db.php";
+  include "include/function.php";
   include "include/header2.php";
+  session_start();
+   $user_id = $_SESSION['user_id'];
+    $getCartInfo = viewCartInfoForUpdate($conn, $user_id);
 
+
+$error = [];
+if(array_key_exists('submit', $_POST)){
+  if(empty($_POST['edit']) || !is_numeric($_POST['edit'])){
+    $error['edit'] = "Please enter an  intiger value"; 
+  }
+  if(empty($error)){
+    $info = array_map('trim', $_POST);
+   
+    $info['cart_id'] = $getCartInfo['cart_id'];
+    updateCartQuantity($conn, $info, $user_id);
+
+  }
+}
  ?>
   <!-- main content starts here -->
   <div class="main">
     <table class="cart-table">
       <thead>
+         <?php  $showError = displayError($error, 'edit'); echo $showError;  ?>
         <tr>
           <th><h3>Item</h3></th>
           <th><h3>Price</h3></th>
@@ -16,66 +36,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td><div class="book-cover"></div></td>
-          <td><p class="book-price">$200</p></td>
-          <td><p class="quantity">3</p></td>
-          <td><p class="total">$600</p></td>
-          <td>
-            <form class="update">
-              <input type="number" class="text-field qty">
-              <input type="submit" class="def-button change-qty" value="Change Qty">
-            </form>
-          </td>
-          <td>
-            <a href class="def-button remove-item">Remove Item</a>
-          </td>
-        </tr>
-        <tr>
-          <td><div class="book-cover"></div></td>
-          <td><p class="book-price">$150</p></td>
-          <td><p class="quantity">2</p></td>
-          <td><p class="total">$300</p></td>
-          <td>
-            <form class="update">
-              <input type="number" class="text-field qty">
-              <input type="submit" class="def-button change-qty" value="Change Qty">
-            </form>
-          </td>
-          <td>
-            <a href="#" class="def-button remove-item">Remove Item</a>
-          </td>
-        </tr>
-        <tr>
-          <td><div class="book-cover b3"></div></td>
-          <td><p class="book-price">$300</p></td>
-          <td><p class="quantity">2</p></td>
-          <td><p class="total">$600</p></td>
-          <td>
-            <form class="update">
-              <input type="number" class="text-field qty">
-              <input type="submit" class="def-button change-qty" value="Change Qty">
-            </form>
-          </td>
-          <td>
-            <a href="#" class="def-button remove-item">Remove Item</a>
-          </td>
-        </tr>
-        <tr>
-          <td><div class="book-cover" style="background: url('img/4.jpg');background-size: contain;background-position: center;background-repeat: no-repeat;"></div></td>
-          <td><p class="book-price">$50</p></td>
-          <td><p class="quantity">5</p></td>
-          <td><p class="total">$250</p></td>
-          <td>
-            <form class="update">
-              <input type="number" class="text-field qty">
-              <input type="submit" class="def-button change-qty" value="Change Qty">
-            </form>
-          </td>
-          <td>
-            <a href="#" class="def-button remove-item">Remove Item</a>
-          </td>
-        </tr>
+        <?php $showCartInfo = viewCartInfo($conn, $user_id);  echo $showCartInfo; ?>
       </tbody>
     </table>
     <div class="cart-table-actions">

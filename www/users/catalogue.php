@@ -15,7 +15,7 @@
     <div class="categories">
       <h3 class="header">Categories</h3>
       <ul class="category-list">
-        <?php $viewAllCategories =selectCategory($conn);
+        <?php $viewAllCategories = selectCategory($conn);
         echo $viewAllCategories; ?>
       </ul>
     </div>

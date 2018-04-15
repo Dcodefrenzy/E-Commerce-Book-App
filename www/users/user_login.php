@@ -3,7 +3,7 @@ include "include/db.php";
 include "include/function.php";
 include "include/header.php";
 
-
+      session_start();
 
     $error = array();
     if(array_key_exists('login', $_POST)){
@@ -20,9 +20,10 @@ include "include/header.php";
          $user = $response[1];
          header("Location:index.php");
 
-         $_SESSION['admin_id']= $user['admin_id'];
+         $_SESSION['user_id']= $user['user_id'];
          $_SESSION['firstname']= $user['firstname'];
          $_SESSION['lastname']= $user['lastname'];
+         $_SESSION['username']= $user['username'];
          $_SESSION['email']= $user['email'];
 
        }else{
