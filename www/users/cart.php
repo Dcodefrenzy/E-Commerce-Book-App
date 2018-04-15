@@ -52,7 +52,7 @@ if(array_key_exists('submit', $_POST)){
         <a href="#"><p>2</p></a>
         <a href="#"><p>3</p></a>
       </div>
-      <a href="checkout.html"><button class="def-button checkout">Checkout</button></a>
+      <?php echo '<a href="checkout.php?cart_id='.$user_id.'"><button class="def-button checkout">Checkout</button></a>'?>
     </div>
     
   </div>
