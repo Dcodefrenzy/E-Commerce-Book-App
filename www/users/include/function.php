@@ -101,22 +101,43 @@ function addCategory($dbcon, $data){
   echo "Successful";
 }
 //here is the function for view category page.
-function viewCategories($dbcon){
+function viewComment($dbcon){
  $result ="";
-  $stat = $dbcon -> prepare("SELECT * FROM add_category");
+  $stat = $dbcon -> prepare("SELECT * FROM comments");
   $stat ->execute();
 
   while($row = $stat -> fetch(PDO::FETCH_BOTH)){
 
-    $result .= "<tr><td>".$row['category_id']."</td>";
-    $result .= "<td>".$row['category_name']."</td>";
-    $result .= "<td>".$row['date_created']."</td>";
-    $result .= '<td><a href=edit_category.php?cat_id='.$row[0].'>edit</a></td>';
-    $result .= '<td><a href=delete_category.php?cat_id='.$row[0].'>delete</a></td></tr>';
+          $result .= '<li class="review">
+          <div class="avatar-def user-image">
+            <h4 class="user-init"></h4>
+          </div>
+          <div class="info">';
+            $result .= '<h4 class="username">'.$row['username'].'</h4>';
+            $result .= '<p class="comment">'.$row['comment'].'</p>
+          </div>
+        </li>';
+
+   
 
   }
   return $result;
 }
+
+function insertCartInfo($dbcon, $input, $userId){
+  $stat = $dbcon->prepare("INSERT INTO cart(item_name, item, price, quantity, user_id)
+                          VALUES(:itn, :it, :pr, :co, :ui)");
+                          $data = [
+                            ':itn' => $input['book_name'],
+                            ':it' => $input['img_path'],
+                            ':pr' => $input['price'],
+                            ':co'=> $input['amount'],
+                            ':ui' => $userId,
+                          ];
+                          $stat -> execute($data);
+
+}
+
 //function edit category is used for editing category name.
 function editCategory($dbcon, $data, $dat){
   $stat= $dbcon->prepare("UPDATE add_category SET category_name=:e, date_created=NOW() WHERE category_id=:id");
@@ -155,20 +176,19 @@ function selectCategory($dbcon){
   }
   return $result;
 }
-function addBooks($dbcon, $input){
-  $stat = $dbcon->prepare("INSERT INTO add_books(title, author, price, category, flag, img_path, pub_date)
-                          VALUES(:t, :a, :p, :c, :f, :im, :pub)");
+
+function insertComment($dbcon, $input, $userId, $userName){
+  $stat = $dbcon->prepare("INSERT INTO comments(comment, user_id, username, date_created)
+                          VALUES(:co, :us, :usn, NOW())");
                           $data = [
-                            ':t'=> $input['title'],
-                            ':a' => $input['author'],
-                            ':p' => $input['price'],
-                            ':c' => $input['category'],
-                            ':f' => $input['flag'],
-                            ':im' => $input['dest'],
-                            ':pub' => $input['year'],
+                            ':co'=> $input['comment'],
+                            ':us'=> $userId,
+                            ':usn'=> $userName,
                           ];
                           $stat -> execute($data);
+
 }
+
 function getBookByCategory($dbcon, $catId){
   $result = "";
   $stat = $dbcon -> prepare("SELECT * FROM add_books WHERE category =:cat_id");
@@ -185,25 +205,31 @@ function getBookByCategory($dbcon, $catId){
 
     return $result;
 }
-function viewBooks($dbcon){
+function getBooksByBookId($dbcon, $bookId){
  $result ="";
-  $stat = $dbcon -> prepare("SELECT * FROM add_books WHERE boo_id = :bi");
+  $stat = $dbcon -> prepare("SELECT * FROM add_books WHERE book_id = :bi");
+  $stat ->bindParam(':bi', $bookId);
   $stat ->execute();
 
-  while($row = $stat -> fetch(PDO::FETCH_BOTH)){
-
-    $result .= "<tr><td>".$row['book_id']."</td>";
-    $result .= "<td>".$row['title']."</td>";
-    $result .= "<td>".$row['author']."</td>";
-    $result .= "<td>".$row['price']."</td>";
-    $result .= "<td>".$row['category']."</td>";
-    $result .= "<td>".$row['flag']."</td>";
-    $result .= "<td>"."<div style=\"width:50px; height:50px; background-image:url('".$row['img_path']."'); background-size:cover;background-repeat:no-repeat;background-position:center\"></div></td>";
-    $result .= "<td>".$row['pub_date']."</td>";
-    $result .= '<td><a href=edit_books.php?book_id='.$row[0].'>edit</a></td>';
-    $result .= '<td><a href=delete_books.php?book_id='.$row[0].'>delete</a></td></tr>';
+  if ($row = $stat -> fetch(PDO::FETCH_BOTH)){
+      $result .= '<div class="display-book" style="background: url('.$row['img_path'].'); background-size: cover;
+  background-position: center; background-repeat: no-repeat";></div>';
+      $result .=  '<div class="info">';
+      $result .= '<h2 class="book-title">'.$row['title']. '</h2>';
+       $result .= '<h3 class="book-author">'.$row['author'].'</h3>';
+       $result .= '<h3 class="book-price">'.$row['price'].'</h3>';
 
   }
+  return $result;
+}
+    function getBooksByBookIdForCart($dbcon, $bookId){
+  $result =array ();
+  $stat = $dbcon -> prepare("SELECT * FROM add_books WHERE book_id = :bi");
+  $stat ->bindParam(':bi', $bookId);
+  $stat ->execute();
+
+   $result = $stat -> fetch(PDO::FETCH_BOTH);
+
   return $result;
 }
 
