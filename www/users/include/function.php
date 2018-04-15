@@ -130,12 +130,10 @@ function viewCartInfo($dbcon, $userId){
   $stat = $dbcon -> prepare("SELECT * FROM cart WHERE user_id = :ui");
   $stat-> bindParam(':ui', $userId);
   $stat ->execute();
-  
 
   while($row = $stat -> fetch(PDO::FETCH_BOTH)){
-
             $result.='<tr>';
-          $result .= '<td><div class="book-cover" style="background: url('.$row['item'].'); background-size: cover;
+          $result .= '<td><div class="book-cover" style="background: url(../user'.$row['item'].'); background-size: cover;
           background-position: center; background-repeat: no-repeat" ;></div></td>';
           $result .= '<td><p class="book-price">'.$row['price'].'</p></td>';
           $result .='<td><p class="quantity">'.$row['quantity'].'</p></td>';
@@ -150,6 +148,7 @@ function viewCartInfo($dbcon, $userId){
             <a href="cart_delete.php?cart_id='.$row['cart_id'].'" class="def-button remove-item">Remove Item</a>
           </td>
         </tr>';
+       
 
 
   }
@@ -157,16 +156,16 @@ function viewCartInfo($dbcon, $userId){
 }
 
 function viewCartInfoForUpdate($dbcon, $userId){
- $result =[];
-  $stat = $dbcon -> prepare("SELECT * FROM cart WHERE user_id = :ui");
+ $result ="";
+  $stat = $dbcon -> prepare("SELECT cart_id FROM cart WHERE user_id = :ui");
   $stat-> bindParam(':ui', $userId);
   $stat ->execute();
 
-  $result = $stat -> fetch(PDO::FETCH_BOTH);
+ while($row = $stat -> fetch(PDO::FETCH_BOTH)){
+        $result = $row['cart_id'];
+       //var_dump($result);
+     }
       
-
-
-
   return $result;
 }
 
@@ -230,7 +229,7 @@ function getBookByCategory($dbcon, $catId){
     while($row = $stat -> fetch (PDO::FETCH_BOTH)){
 
      $result .= '<li class="book">
-      <a href="book_preview.php?book_id='.$row['book_id'].'"><div class="book-cover" style="background-image:url('.$row['img_path'].'); background-size:cover; background-position:center; background-repeat: no-repeat;"></div>';
+      <a href="book_preview.php?book_id=../'.$row['book_id'].'"><div class="book-cover" style="background-image:url('.$row['img_path'].'); background-size:cover; background-position:center; background-repeat: no-repeat;"></div>';
       $result .= '<div class="book-price"><p>'.$row['price'].'</p></div>
         </li>';
     }

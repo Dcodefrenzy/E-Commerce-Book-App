@@ -5,6 +5,7 @@
   session_start();
    $user_id = $_SESSION['user_id'];
     $getCartInfo = viewCartInfoForUpdate($conn, $user_id);
+    
 
 
 $error = [];
@@ -25,7 +26,9 @@ if(array_key_exists('submit', $_POST)){
   <div class="main">
     <table class="cart-table">
       <thead>
-         <?php  $showError = displayError($error, 'edit'); echo $showError;  ?>
+         <?php  $showError = displayError($error, 'edit'); echo $showError; 
+
+          ?>
         <tr>
           <th><h3>Item</h3></th>
           <th><h3>Price</h3></th>
@@ -36,7 +39,9 @@ if(array_key_exists('submit', $_POST)){
         </tr>
       </thead>
       <tbody>
-        <?php $showCartInfo = viewCartInfo($conn, $user_id);  echo $showCartInfo; ?>
+        <?php $showCartInfo = viewCartInfo($conn, $user_id);  echo $showCartInfo;
+        ?>
+
       </tbody>
     </table>
     <div class="cart-table-actions">

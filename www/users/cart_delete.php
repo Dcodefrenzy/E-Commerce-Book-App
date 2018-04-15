@@ -1,7 +1,7 @@
 <?php 
 include "include/db.php";
 include "include/function.php";
-//include "include/header2.php";
+include "include/header2.php";
 
 session_start();
 $_SESSION['user_id'];
