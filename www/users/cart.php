@@ -4,36 +4,26 @@
   include "include/header2.php";
   session_start();
    $user_id = $_SESSION['user_id'];
-  
-  $showCartInfo = viewCartInfo($conn, $user_id);
- 
-  $cart_id = $showCartInfo[0];
-  
-        
-  
  
 
 
+
+  $error=[];
+  if(isset($_GET['cart_id'])){
+  $cart_id = $_GET['cart_id'];
+}
 $error = [];
 if(array_key_exists('submit', $_POST)){
   if(empty($_POST['edit']) || !is_numeric($_POST['edit'])){
     $error['edit'] = "Please enter an  intiger value"; 
   }
   if(empty($error)){
-    foreach ($cart_id as $id) {
-     $info = array_map('trim', $_POST);
-     while( $cid=$id){
-     updateCartQuantity($conn, $info, $user_id, $cid);
+    $info = array_map('trim', $_POST);
+    if(isset($cart_id)){
+    updateCartQuantity($conn, $info, $user_id, $cart_id);
     }
-}
-    
-   
-   
-   
-
- 
   }
-}
+  }
  ?>
   <!-- main content starts here -->
   <div class="main">
@@ -52,9 +42,28 @@ if(array_key_exists('submit', $_POST)){
         </tr>
       </thead>
       <tbody>
-        <?php $showCartInfo = viewCartInfo($conn, $user_id); 
-              echo $showCartInfo[1] ;
-        ?>
+        <?php  $data = viewCartInfo($conn, $user_id); 
+          while($row = $data-> fetch(PDO::FETCH_BOTH)){
+            extract($row);
+             ?>
+            <tr>
+          <td><div class="book-cover" style="background:url(<?php echo $item ?>); background-size: cover;
+          background-position: center; background-repeat: no-repeat"></div></td>
+          <td><p class="book-price"><?php echo $price ?></p></td>
+         <td><p class="quantity"><?php echo $quantity ?></p></td>
+          <td><p class="total"><?php echo $total ?></p></td>
+         
+              <td>
+            <form class="update" method="POST">
+              <input type="number" class="text-field qty" name="edit" value=<?php echo $quantity; ?>>
+              <input type="submit" class="def-button change-qty"  name="submit" value="Change Qty">
+            </form>
+          </td>    
+          <td>
+            <?php  echo '<a href="cart_delete.php?cart_id="'.$cart_id.' class="def-button remove-item">Remove Item</a>'?>
+          </td>
+            <?php } ?>
+        
 
       </tbody>
     </table>
