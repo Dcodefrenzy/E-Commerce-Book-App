@@ -88,7 +88,7 @@ function authentication($authenticate){
     header("location:admin_login.php?error=$err");
   }
 }
-function 
+
 
 
 function viewComment($dbcon){
@@ -145,22 +145,12 @@ function viewCartInfoForUpdate($dbcon, $cartId){
 }
 
 function getCartInfoForCheckout($dbcon, $userId){
- $result =[];
+
   $stat = $dbcon -> prepare("SELECT * FROM cart WHERE user_id = :ui");
   $stat-> bindParam(':ui', $userId);
   $stat ->execute();
-
- while($row = $stat -> fetch(PDO::FETCH_BOTH)){;
- 
-    extract($row);
-    
-    $result  []= $total;
-    
-
-  }
-     
       
-  return $result;
+  return $stat;
 }
 
 function updateCartQuantity($dbcon, $input,  $userId, $cartId){

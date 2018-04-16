@@ -5,15 +5,16 @@ include "include/header.php";
 
   session_start();
   $user_id = $_SESSION['user_id'];
-  $total_price = "";
+  $total_price = 0;
   //Called In $total from function.php and it holds an array.
   $cartInfo = getCartInfoForCheckout($conn, $user_id);
-  
-  $price = (int)str_replace('$', '', $cartInfo[0]);
-  $price2 = (int)str_replace('$', '', $cartInfo[1]);
-  
-  
-  $total_price = $price + $price2;
+    while($info = $cartInfo-> fetch(PDO::FETCH_BOTH)){
+        extract($info);
+     $price1 = (int)str_replace('$', '', $price);
+     $amount = $quantity * $price1;
+     $total_price += $amount;
+ 
+  }
  
 
 
