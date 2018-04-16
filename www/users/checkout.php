@@ -6,11 +6,15 @@ include "include/header.php";
   session_start();
   $user_id = $_SESSION['user_id'];
   $total_price = "";
+  //Called In $total from function.php and it holds an array.
+  $cartInfo = getCartInfoForCheckout($conn, $user_id);
   
-$cartInfo = viewCartInfoForUpdate($conn, $user_id);
-
-  $price = (int)str_replace('$', '', $cartInfo['total']);
-  $total_price += $price;
+  $price = (int)str_replace('$', '', $cartInfo[0]);
+  $price2 = (int)str_replace('$', '', $cartInfo[1]);
+  
+  
+  $total_price = $price + $price2;
+ 
 
 
 
@@ -30,6 +34,7 @@ $cartInfo = viewCartInfoForUpdate($conn, $user_id);
       }if(empty($error)){
 
           $data = array_map('trim', $_POST);
+          $data['price'] = "$".$total_price;
           $data['user_id'] = $user_id; 
         insertIntoCkeckout($conn, $data);
     }
@@ -41,7 +46,7 @@ $cartInfo = viewCartInfoForUpdate($conn, $user_id);
     <div class="checkout-form">
       <form class="def-modal-form" method="POST">
         <div class="total-cost">
-          <h3><?php echo "$".$total_price.'Total Purchase'?></h3>
+          <h3><?php echo "$".$total_price.' Total Purchase'?></h3>
         </div>
         <div class="cancel-icon close-form"></div>
         <label for="login-form" class="header"><h3>Checkout</h3></label>

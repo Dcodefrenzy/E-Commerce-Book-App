@@ -4,8 +4,14 @@
   include "include/header2.php";
   session_start();
    $user_id = $_SESSION['user_id'];
-    $getCartInfo = viewCartInfoForUpdate($conn, $user_id);
-    
+  
+  $showCartInfo = viewCartInfo($conn, $user_id);
+ 
+  $cart_id = $showCartInfo[0];
+  
+        
+  
+ 
 
 
 $error = [];
@@ -14,11 +20,18 @@ if(array_key_exists('submit', $_POST)){
     $error['edit'] = "Please enter an  intiger value"; 
   }
   if(empty($error)){
-    $info = array_map('trim', $_POST);
+    foreach ($cart_id as $id) {
+     $info = array_map('trim', $_POST);
+     while( $cid=$id){
+     updateCartQuantity($conn, $info, $user_id, $cid);
+    }
+}
+    
    
-    $info['cart_id'] = $getCartInfo['cart_id'];
-    updateCartQuantity($conn, $info, $user_id);
+   
+   
 
+ 
   }
 }
  ?>
@@ -39,7 +52,8 @@ if(array_key_exists('submit', $_POST)){
         </tr>
       </thead>
       <tbody>
-        <?php $showCartInfo = viewCartInfo($conn, $user_id);  echo $showCartInfo;
+        <?php $showCartInfo = viewCartInfo($conn, $user_id); 
+              echo $showCartInfo[1] ;
         ?>
 
       </tbody>
