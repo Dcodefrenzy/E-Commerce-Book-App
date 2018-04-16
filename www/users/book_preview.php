@@ -22,15 +22,11 @@ session_start();
         $error['amount'] = "You must enter a numeric value";
          }
       if(empty($error)){
-        $bookPrice = $bookInformation['price'];
-        $price =(int)str_replace('$', '', $bookPrice);
-       $quantity = $_POST['amount'];
-       $total = $price * $quantity;
+
         $cartInfo = array_map('trim', $_POST);
         $cartInfo['book_name'] = $bookInformation['title'];
         $cartInfo['img_path'] = $bookInformation['img_path'];
-        $cartInfo['price'] = $bookInformation['price'];
-        $cartInfo['total'] ="$".$total; 
+        $cartInfo['price'] = $bookInformation['price']; 
         insertCartInfo($conn, $cartInfo, $user_id);
         header("Location:cart.php");
       }

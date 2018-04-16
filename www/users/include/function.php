@@ -88,6 +88,7 @@ function authentication($authenticate){
     header("location:admin_login.php?error=$err");
   }
 }
+function 
 
 
 function viewComment($dbcon){
@@ -111,14 +112,13 @@ function viewComment($dbcon){
 }
 
 function insertCartInfo($dbcon, $input, $userId){
-  $stat = $dbcon->prepare("INSERT INTO cart(item_name, item, price, quantity, total, user_id)
-                          VALUES(:itn, :it, :pr, :co, :to, :ui)");
+  $stat = $dbcon->prepare("INSERT INTO cart(item_name, item, price, quantity, user_id)
+                          VALUES(:itn, :it, :pr, :co,  :ui)");
                           $data = [
                             ':itn' => $input['book_name'],
                             ':it' => $input['img_path'],
                             ':pr' => $input['price'],
                             ':co'=> $input['amount'],
-                            ':to' => $input['total'],
                             ':ui' => $userId,
                           ];
                           $stat -> execute($data);
@@ -133,23 +133,15 @@ function viewCartInfo($dbcon, $userId){
 
 return $stat;
 }
-function viewCartInfoForUpdate($dbcon, $userId){
- $result ="";
-  $stat = $dbcon -> prepare("SELECT * FROM cart WHERE user_id = :ui");
-  $stat-> bindParam(':ui', $userId);
-  $stat ->execute();
 
- while($row = $stat -> fetch(PDO::FETCH_BOTH)){;
+function viewCartInfoForUpdate($dbcon, $cartId){
  
-    extract($row);
-    
-    $result  .= $cart_id;
-   
-
-  }
-     
+  $stat = $dbcon -> prepare("SELECT * FROM cart WHERE cart_id = :ui");
+  $stat-> bindParam(':ui', $cartId);
+  $stat ->execute();
+  
       
-  return $result;
+  return $stat;
 }
 
 function getCartInfoForCheckout($dbcon, $userId){
@@ -172,7 +164,7 @@ function getCartInfoForCheckout($dbcon, $userId){
 }
 
 function updateCartQuantity($dbcon, $input,  $userId, $cartId){
-  $stat= $dbcon->prepare("UPDATE cart SET quantity=:e WHERE user_id =:id && cart_id = :ca");
+  $stat= $dbcon->prepare("UPDATE cart SET quantity=:e  WHERE user_id =:id && cart_id = :ca");
   $data = [':e' => $input['edit'],
             ':id' => $userId,
             ':ca' => $cartId,

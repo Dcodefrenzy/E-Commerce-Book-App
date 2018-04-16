@@ -1,8 +1,10 @@
 <?php 
-
+include "include/db.php";
+include "include/class.viewed.php";
 include "include/header2.php";
 
  ?>
+    
   <!-- main content starts here -->
   <div class="main">
     <div class="book-display">

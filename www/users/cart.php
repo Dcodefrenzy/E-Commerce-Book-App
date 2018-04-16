@@ -3,7 +3,12 @@
   include "include/function.php";
   include "include/header2.php";
   session_start();
+  if(isset($_SESSION['user_id'])){
+
    $user_id = $_SESSION['user_id'];
+  }else{
+    header("Location:user_login.php");
+  }
  
 
 
@@ -51,16 +56,15 @@ if(array_key_exists('submit', $_POST)){
           background-position: center; background-repeat: no-repeat"></div></td>
           <td><p class="book-price"><?php echo $price ?></p></td>
          <td><p class="quantity"><?php echo $quantity ?></p></td>
-          <td><p class="total"><?php echo $total ?></p></td>
+         <?php  $amount = (int)str_replace('$', '', $price);  
+                 $total = $amount * $quantity; ?>
+          <td><p class="total"><?php echo "$".$total ?></p></td>
          
               <td>
-            <form class="update" method="POST">
-              <input type="number" class="text-field qty" name="edit" value=<?php echo $quantity; ?>>
-              <input type="submit" class="def-button change-qty"  name="submit" value="Change Qty">
-            </form>
+          <?php echo '<a href="update_cart.php?cart_id='.$cart_id.'" class="def-button remove-item">Update Quantity</a>'?>   
           </td>    
           <td>
-            <?php  echo '<a href="cart_delete.php?cart_id="'.$cart_id.' class="def-button remove-item">Remove Item</a>'?>
+            <?php  echo '<a href="index_delete.php?cart_id='.$cart_id.'" class="def-button remove-item">Remove Item</a>'?>
           </td>
             <?php } ?>
         
