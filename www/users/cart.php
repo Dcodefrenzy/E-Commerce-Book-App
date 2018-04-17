@@ -11,8 +11,6 @@
   }
  
 
-
-
   $error=[];
   if(isset($_GET['cart_id'])){
   $cart_id = $_GET['cart_id'];
@@ -64,7 +62,7 @@ if(array_key_exists('submit', $_POST)){
           <?php echo '<a href="update_cart.php?cart_id='.$cart_id.'" class="def-button remove-item">Update Quantity</a>'?>   
           </td>    
           <td>
-            <?php  echo '<a href="index_delete.php?cart_id='.$cart_id.'" class="def-button remove-item">Remove Item</a>'?>
+            <?php  echo '<a href="cart_delete.php?cart_id='.$cart_id.'" class="def-button remove-item">Remove Item</a>'?>
           </td>
             <?php } ?>
         

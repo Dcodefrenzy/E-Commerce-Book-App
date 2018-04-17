@@ -244,7 +244,7 @@ function getBooksByBookId($dbcon, $bookId){
   $stat ->bindParam(':bi', $bookId);
   $stat ->execute();
 
-  if ($row = $stat -> fetch(PDO::FETCH_BOTH)){
+  while($row = $stat -> fetch(PDO::FETCH_BOTH)){
       $result .= '<div class="display-book" style="background: url('.$row['img_path'].'); background-size: cover;
   background-position: center; background-repeat: no-repeat";></div>';
       $result .=  '<div class="info">';
@@ -266,31 +266,67 @@ function getBooksByBookId($dbcon, $bookId){
   return $result;
 }
 
-function editBooks($dbcon, $bookId, $input){
-  $stat= $dbcon->prepare("UPDATE add_books SET title=:t, author=:a, price=:p, category=:c, flag=:f,
-                           pub_date=:pub WHERE book_id=:bi");
-
-  $input= [
-    ':bi'=> $bookId,
-    ':t'=> $input['title'],
-    ':a' => $input['author'],
-    ':p' => $input['price'],
-    ':c' => $input['category'],
-    ':f' => $input['flag'],
-    ':pub' => $input['year'],
-  ];
-  $stat ->execute($input);
-  header("Location:view_books.php");
-
+function viewTrendingInfofromBooks($dbcon, $flag){
+  $result= "";
+  $stat = $dbcon->prepare("SELECT * FROM add_books WHERE flag =:fl");
+  $stat->bindParam(':fl', $flag);
+  $stat->execute();
+  while($row=$stat->fetch(PDO::FETCH_BOTH)){
+      extract($row);
+       $result .='<li class="book">';
+          $result .='<a href="book_preview.php?book_id='.$book_id.'"><div class="book-cover" style="background-image:url('.$img_path.'); 
+                                      background-size:cover; 
+                                      background-position:center; 
+                                      background-repeat: no-repeat"> </div></a>';
+          $result .='<div class="book-price"><p>'.$price.'</p></div>
+        </li>';
+  }
+  return $result;
 }
 
-function deleteBook($dbcon, $data){
-  $stat= $dbcon->prepare("DELETE  FROM add_books  WHERE book_id=:id");
-  $stat->bindParam(':id', $data);
-  $stat ->execute();
-  header("Location:view_books.php");
-
+function insertIntoRecentlyViewedBook($dbcon, $input, $bookId, $userId){
+  $stat= $dbcon->prepare("INSERT INTO recently_viewed(price, img_path, book_id, user_id) 
+                            VALUES(:p, :img, :bi, :ui) ");
+      $data=[
+            ':p' =>$input['price'],
+            ':img'=>$input['img_path'],
+            ':bi'=>$bookId,
+            ':ui'=>$userId,
+      ];
+      $stat->execute($data);
 }
+function getFromRecentlyViewedBook($dbcon, $bookId, $userId){
+        $result="";
+        $stat=$dbcon->prepare("SELECT * FROM recently_viewed WHERE book_id= :bi && user_id = :ui");
+        $stat->bindParam(':bi', $bookId);
+        $stat->bindParam(':ui', $userId);
+        $stat->execute();
+        $result=$stat->fetch(PDO::FETCH_ASSOC);
+          
+return $result;
+}
+function showRecentlyViewedBook($dbcon, $userId){
+    $result="";
+        $stat=$dbcon->prepare("SELECT * FROM recently_viewed WHERE  user_id = :ui LIMIT  4");
+        $stat->bindParam(':ui', $userId);
+        $stat->execute();
+        while($row=$stat->fetch(PDO::FETCH_ASSOC)){
+          extract($row);
+        $result .='<div class="scroll-back"></div>
+                  <div class="scroll-front"></div>';
+          $result .= '<li class="book">';
+          $result .= '<a href="book_preview.php?book_id='.$book_id.'">
+                      <div class="book-cover" style="background-image:url('.$img_path.'); 
+                                      background-size:cover; 
+                                      background-position:center; 
+                                      background-repeat: no-repeat"></div></a>';
+          $result .='<div class="book-price"><p>'.$price.'</p></div>
+        </li>';
+        }
+          
+return $result;
+}
+
 function curNav($page){
   $curPage = basename($_SERVER['SCRIPT_NAME']);
   if($page === $curPage){

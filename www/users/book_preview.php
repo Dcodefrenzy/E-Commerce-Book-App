@@ -10,10 +10,21 @@ session_start();
       $user_id = $_SESSION['user_id'];
       $username = $_SESSION['username'];
     }
+
+    
       if (isset($_GET['book_id'])){
     $book_id = $_GET['book_id'];
-    $bookInfo = getBooksByBookId($conn, $book_id);
+    
+    $recentlyViewed = getFromRecentlyViewedBook($conn, $book_id, $user_id);
     $bookInformation = getBooksByBookIdForCart($conn, $book_id);
+      
+    if($book_id!=$recentlyViewed['book_id']){
+        insertIntoRecentlyViewedBook($conn, $bookInformation, $book_id, $user_id); 
+    }
+
+    $bookInfo = getBooksByBookId($conn, $book_id);
+
+    
      }
 
      if(array_key_exists('submit', $_POST)){

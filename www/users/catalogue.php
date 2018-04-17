@@ -3,7 +3,8 @@
   include "include/function.php";
   include "include/header3.php";
 
-  
+  session_start();
+   $user_id = $_SESSION['user_id'];
   $cat_id = $_GET['cat_id'];
 
 
@@ -15,7 +16,8 @@
     <div class="categories">
       <h3 class="header">Categories</h3>
       <ul class="category-list">
-        <?php $viewAllCategories = selectCategory($conn);
+        <?php 
+        $viewAllCategories = selectCategory($conn);
         echo $viewAllCategories; ?>
       </ul>
     </div>
@@ -36,22 +38,7 @@
       <ul class="book-list">
         <div class="scroll-back"></div>
         <div class="scroll-front"></div>
-        <li class="book">
-          <a href="#"><div class="book-cover"></div></a>
-          <div class="book-price"><p>$250</p></div>
-        </li>
-        <li class="book">
-          <a href="#"><div class="book-cover"></div></a>
-          <div class="book-price"><p>$50</p></div>
-        </li>
-        <li class="book">
-          <a href="#"><div class="book-cover"></div></a>
-          <div class="book-price"><p>$125</p></div>
-        </li>
-        <li class="book">
-          <a href="#"><div class="book-cover"></div></a>
-          <div class="book-price"><p>$90</p></div>
-        </li>
+        <?php $showRecentlyViewedBooks =showRecentlyViewedBook($conn, $user_id); echo $showRecentlyViewedBooks;?>
       </ul>
     </div>
     

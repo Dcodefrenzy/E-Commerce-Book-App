@@ -8,7 +8,6 @@ session_start();
    $user_id =$_SESSION['user_id'];
  
   $view_index =  new ViewInIndex;
-  $show_index = new ViewInIndex;
   $view_index->GetFromAddBook($conn, 'Top selling');
   $view_topselling =$view_index ->flag; 
 
@@ -56,50 +55,16 @@ session_start();
         </form>
       </div>
     </div>
-    <?php 
-        while($show_index->ShowTrending($conn, 'Trending')){  
-              $rown=$show_index;
-              
-              extract($row);
-
-                         ?>
     <div class="trending-books horizontal-book-list">
       <h3 class="header"> Trending </h3>
       <ul class="book-list">
-        <li class="book">
-          <a href="#"><div class="book-cover" style="background-image:url(<?php echo $img_path ?>); 
-                                      background-size:cover; 
-                                      background-position:center; 
-                                      background-repeat: no-repeat"> ></div></a>
-          <div class="book-price"><p><?php echo $price ?></p></div>
-          <?php } ?>
-        </li>
-        
+        <?php $view_trending =viewTrendingInfofromBooks($conn, 'Trending'); echo $view_trending; ?>  
       </ul>
-
-        
     </div>
     <div class="recently-viewed-books horizontal-book-list">
       <h3 class="header">Recently Viewed</h3>
       <ul class="book-list">
-        <div class="scroll-back"></div>
-        <div class="scroll-front"></div>
-        <li class="book">
-          <a href="#"><div class="book-cover"></div></a>
-          <div class="book-price"><p>$250</p></div>
-        </li>
-        <li class="book">
-          <a href="#"><div class="book-cover"></div></a>
-          <div class="book-price"><p>$50</p></div>
-        </li>
-        <li class="book">
-          <a href="#"><div class="book-cover"></div></a>
-          <div class="book-price"><p>$125</p></div>
-        </li>
-        <li class="book">
-          <a href="#"><div class="book-cover"></div></a>
-          <div class="book-price"><p>$90</p></div>
-        </li>
+        <?php   $showResentlyViewedBook =showRecentlyViewedBook($conn, $user_id); echo $showResentlyViewedBook ;?>
       </ul>
     </div>
     
