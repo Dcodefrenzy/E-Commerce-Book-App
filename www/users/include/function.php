@@ -127,7 +127,7 @@ function insertCartInfo($dbcon, $input, $userId){
 
 function viewCartInfo($dbcon, $userId){
 
-  $stat = $dbcon -> prepare("SELECT * FROM cart WHERE user_id = :ui");
+  $stat = $dbcon -> prepare("SELECT * FROM cart WHERE user_id = :ui ");
   $stat-> bindParam(':ui', $userId);
   $stat ->execute();
 
