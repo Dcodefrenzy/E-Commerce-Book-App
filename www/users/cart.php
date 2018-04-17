@@ -3,6 +3,8 @@
   include "include/function.php";
   include "include/header2.php";
   session_start();
+  $record_per_page = 3;
+  $page = '';
   if(isset($_SESSION['user_id'])){
 
    $user_id = $_SESSION['user_id'];
@@ -10,11 +12,16 @@
     header("Location:user_login.php");
   }
  
-
-  $error=[];
   if(isset($_GET['cart_id'])){
   $cart_id = $_GET['cart_id'];
-}
+  }
+  if(isset($_GET['page'])){
+    $page = $_GET['page'];
+  }else{
+    $page = 1;
+  }
+  $start_from = ($page-1)*$record_per_page;
+
 $error = [];
 if(array_key_exists('submit', $_POST)){
   if(empty($_POST['edit']) || !is_numeric($_POST['edit'])){
@@ -45,7 +52,9 @@ if(array_key_exists('submit', $_POST)){
         </tr>
       </thead>
       <tbody>
-        <?php  $data = viewCartInfo($conn, $user_id); 
+        <?php  
+
+          $data = viewCartInfo($conn, $user_id, $start_from, $record_per_page); 
           while($row = $data-> fetch(PDO::FETCH_BOTH)){
             extract($row);
              ?>
@@ -64,19 +73,16 @@ if(array_key_exists('submit', $_POST)){
           <td>
             <?php  echo '<a href="cart_delete.php?cart_id='.$cart_id.'" class="def-button remove-item">Remove Item</a>'?>
           </td>
-            <?php } ?>
-        
-
+            <?php } //Ending while loop?>
       </tbody>
     </table>
     <div class="cart-table-actions">
-      <button class="def-button previous">previous</button>
-      <button class="def-button next">next</button>
+        <button class="def-button previous">previous</button></a>
+        <button class="def-button next">next</button></a>' 
       <div class="index">
-        <a href="#"><p>1</p></a>
-        <a href="#"><p>2</p></a>
-        <a href="#"><p>3</p></a>
+        <?php  $link = pagination($conn, $user_id,  $record_per_page); echo $link; ?>
       </div>
+   
       <?php echo '<a href="checkout.php?user_id='.$user_id.'"><button class="def-button checkout">Checkout</button></a>'?>
     </div>
     

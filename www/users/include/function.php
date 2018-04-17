@@ -125,13 +125,26 @@ function insertCartInfo($dbcon, $input, $userId){
 
 }
 
-function viewCartInfo($dbcon, $userId){
+function viewCartInfo($dbcon, $userId, $start, $record){
 
-  $stat = $dbcon -> prepare("SELECT * FROM cart WHERE user_id = :ui ");
+  $stat = $dbcon -> prepare("SELECT * FROM cart WHERE user_id = :ui  order by cart_id DESC LIMIT $start, $record");
   $stat-> bindParam(':ui', $userId);
   $stat ->execute();
+  return $stat;
+}
 
-return $stat;
+function pagination($dbcon, $userId,  $record){
+  $result = "";
+  $stat = $dbcon -> prepare("SELECT * FROM cart WHERE user_id = :ui  ORDER BY cart_id DESC");
+  $stat-> bindParam(':ui', $userId);
+  $stat ->execute();
+  $count = $stat->rowCount();
+  $row = ceil($count/$record); 
+      for($i=1; $i <= $row; $i++){ 
+        
+      $result .='<a href="cart.php?page='.$i.'"><p>'.$i.'</p></a>' ;
+    }
+  return $result;
 }
 
 function viewCartInfoForUpdate($dbcon, $cartId){
